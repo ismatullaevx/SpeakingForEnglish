@@ -17,8 +17,8 @@ const UnitPage = () => {
     }
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-            <nav style={{ marginBottom: '2.5rem' }}>
+        <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <nav style={{ marginBottom: 'clamp(1.5rem, 5vh, 2.5rem)' }}>
                 <Link to="/" style={{
                     color: 'var(--text-muted)',
                     textDecoration: 'none',
@@ -32,7 +32,7 @@ const UnitPage = () => {
                 </Link>
             </nav>
 
-            <header style={{ marginBottom: '3.5rem' }}>
+            <header style={{ marginBottom: 'clamp(2rem, 8vh, 3.5rem)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
                     <span style={{
                         backgroundColor: 'var(--primary)',
@@ -45,8 +45,18 @@ const UnitPage = () => {
                         UNIT {unit.id}
                     </span>
                 </div>
-                <h1 style={{ fontSize: '2.5rem', color: 'var(--text-main)', marginBottom: '1rem' }}>{unit.title}</h1>
-                <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', maxWidth: '600px' }}>{unit.description}</p>
+                <h1 style={{
+                    fontSize: 'clamp(1.75rem, 6vw, 2.5rem)',
+                    color: 'var(--text-main)',
+                    marginBottom: '1rem',
+                    lineHeight: '1.2'
+                }}>{unit.title}</h1>
+                <p style={{
+                    color: 'var(--text-muted)',
+                    fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
+                    maxWidth: '600px',
+                    lineHeight: '1.6'
+                }}>{unit.description}</p>
             </header>
 
             <section>

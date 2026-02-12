@@ -4,18 +4,23 @@ import { Link } from 'react-router-dom';
 const QuestionItem = ({ question, unitId }) => {
     return (
         <div className="card" style={{
-            padding: '1.25rem 1.5rem',
+            padding: '1rem clamp(1rem, 3vw, 1.5rem)',
             display: 'flex',
+            flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            gap: '1rem',
             marginBottom: '0',
             border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-sm)'
+            boxShadow: 'var(--shadow-sm)',
+            flexWrap: 'wrap'
         }}>
             <span style={{
-                fontSize: '1rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
                 color: 'var(--text-main)',
-                fontWeight: '500'
+                fontWeight: '500',
+                flex: '1',
+                minWidth: '200px'
             }}>
                 {question.text}
             </span>
@@ -29,7 +34,9 @@ const QuestionItem = ({ question, unitId }) => {
                     padding: '0.5rem 1rem',
                     backgroundColor: '#eef2ff',
                     borderRadius: '0.5rem',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    textAlign: 'center',
+                    whiteSpace: 'nowrap'
                 }}
             >
                 Practice

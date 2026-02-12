@@ -7,8 +7,8 @@ const HomePage = () => {
         <div className="container">
             <section style={{
                 textAlign: 'center',
-                marginBottom: '5rem',
-                marginTop: '3rem'
+                marginBottom: 'clamp(2rem, 10vh, 5rem)',
+                marginTop: 'clamp(1rem, 5vh, 3rem)'
             }}>
                 <div style={{ marginBottom: '1.5rem' }}>
                     <span style={{
@@ -16,7 +16,7 @@ const HomePage = () => {
                         color: 'var(--primary)',
                         padding: '0.5rem 1.25rem',
                         borderRadius: '9999px',
-                        fontSize: '0.875rem',
+                        fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
                         fontWeight: '700',
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em'
@@ -25,19 +25,21 @@ const HomePage = () => {
                     </span>
                 </div>
                 <h1 style={{
-                    fontSize: '3.5rem',
+                    fontSize: 'clamp(2rem, 8vw, 3.5rem)',
                     color: 'var(--text-main)',
                     marginBottom: '1.5rem',
-                    lineHeight: '1.1'
+                    lineHeight: '1.1',
+                    padding: '0 1rem'
                 }}>
                     Speak English with Confidence
                 </h1>
                 <p style={{
-                    fontSize: '1.25rem',
+                    fontSize: 'clamp(1rem, 3vw, 1.25rem)',
                     color: 'var(--text-muted)',
                     maxWidth: '700px',
                     margin: '0 auto',
-                    lineHeight: '1.6'
+                    lineHeight: '1.6',
+                    padding: '0 1rem'
                 }}>
                     Prepare for your B1 certification with interactive speaking practice. Real questions, real-time timer, and instant playback.
                 </p>
@@ -45,8 +47,8 @@ const HomePage = () => {
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
+                gap: 'clamp(1rem, 3vw, 2rem)'
             }}>
                 {b1Data.map(unit => (
                     <UnitCard key={unit.id} unit={unit} />

@@ -11,15 +11,16 @@ const UnitCard = ({ unit }) => {
         }}>
             <div>
                 <h3 style={{
-                    fontSize: '1.25rem',
+                    fontSize: 'clamp(1.1rem, 3vw, 1.25rem)',
                     color: 'var(--text-main)',
-                    marginBottom: '0.75rem'
+                    marginBottom: '0.75rem',
+                    lineHeight: '1.3'
                 }}>
                     {unit.title}
                 </h3>
                 <p style={{
                     color: 'var(--text-muted)',
-                    fontSize: '0.875rem',
+                    fontSize: 'clamp(0.8rem, 2vw, 0.875rem)',
                     marginBottom: '1.5rem',
                     lineHeight: '1.6'
                 }}>
