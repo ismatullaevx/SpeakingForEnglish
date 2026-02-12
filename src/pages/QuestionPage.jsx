@@ -116,8 +116,7 @@ const QuestionPage = () => {
             const result = await evaluateSpeaking(question.text, transcription);
             setAiResult(result);
         } catch (err) {
-            console.error("Evaluation error:", err);
-            setError("AI Evaluation failed. Please check your API key.");
+            setError("AI Evaluation failed. Please check your API key and internet connection.");
         } finally {
             setIsScoring(false);
         }
@@ -341,7 +340,7 @@ const QuestionPage = () => {
                     <div style={{ padding: '2rem 0', animation: 'fadeIn 0.5s' }}>
                         <div className="loader" style={{ margin: '0 auto 1.5rem', display: 'block' }}></div>
                         <p style={{ color: 'var(--text-main)', fontWeight: '600', marginBottom: '0.5rem' }}>Evaluating your performance...</p>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Gemini AI is analyzing your response based on B1 standards</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>AI is analyzing your response based on B1 standards</p>
                     </div>
                 )}
 

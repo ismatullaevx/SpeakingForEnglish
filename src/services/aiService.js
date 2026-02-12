@@ -1,32 +1,72 @@
 import Groq from "groq-sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-const groq = new Groq({
+// Initialize Groq
+const groq = GROQ_API_KEY ? new Groq({
     apiKey: GROQ_API_KEY,
-    dangerouslyAllowBrowser: true // For client-side demo purposes
-});
+    dangerouslyAllowBrowser: true
+}) : null;
+
+// Initialize Gemini
+const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 
 export const evaluateSpeaking = async (question, transcription) => {
-    if (!GROQ_API_KEY) {
-        throw new Error("Groq API Key is missing. Please add VITE_GROQ_API_KEY to your .env file.");
+    // We prefer Gemini if available, otherwise Groq
+    if (GEMINI_API_KEY && genAI) {
+        return await evaluateWithGemini(question, transcription);
+    } else if (GROQ_API_KEY && groq) {
+        return await evaluateWithGroq(question, transcription);
+    } else {
+        throw new Error("No AI API Key found. Please add VITE_GEMINI_API_KEY or VITE_GROQ_API_KEY to your .env file.");
     }
+};
 
+const evaluateWithGemini = async (question, transcription) => {
+    try {
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            generationConfig: { responseMimeType: "application/json" }
+        });
+
+        const prompt = `
+            You are an expert English language examiner specializing in B1 (Intermediate) level certification.
+            Evaluate this spoken response to the question.
+            Question: "${question}"
+            Student's Response: "${transcription}"
+            
+            Return a JSON object with these fields:
+            - "score": (number 1-10)
+            - "transcriptionCorrected": (string, corrected version)
+            - "feedback": (string, performance summary)
+            - "suggestions": (array of strings, 2-3 tips)
+        `;
+
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
+        return JSON.parse(text);
+    } catch (error) {
+        console.error("Gemini Evaluation Error:", error);
+        // Fallback to Groq if Gemini fails
+        if (GROQ_API_KEY && groq) {
+            console.log("Falling back to Groq...");
+            return await evaluateWithGroq(question, transcription);
+        }
+        throw error;
+    }
+};
+
+const evaluateWithGroq = async (question, transcription) => {
     const prompt = `
     You are an expert English language examiner specializing in B1 (Intermediate) level certification.
-    
     Task: Evaluate a student's spoken response to the following question.
-    
     Question: "${question}"
     Student's Response: "${transcription}"
     
-    Please provide a structured evaluation in JSON format. The response must be a single JSON object with EXACTLY these fields:
-    - "score": (number 1-10)
-    - "transcriptionCorrected": (string, corrected version of their answer)
-    - "feedback": (string, brief summary of their performance)
-    - "suggestions": (array of strings, 2-3 specific tips for improvement)
-    
-    Ensure the response is ONLY the JSON object, with no markdown formatting or extra text.
+    Provide a structured evaluation in JSON format with fields: score (1-10), transcriptionCorrected, feedback, suggestions (array).
+    Respond ONLY with valid JSON.
   `;
 
     try {

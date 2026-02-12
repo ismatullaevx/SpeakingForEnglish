@@ -64,8 +64,7 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
                     backgroundColor: '#f0fdf4',
                     borderRadius: '16px',
                     border: '1px solid #bcf0da',
-                    position: 'relative',
-                    group: 'true'
+                    position: 'relative'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                         <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#059669', fontWeight: '700', letterSpacing: '0.05em', margin: 0 }}>AI Corrected Version</h3>
