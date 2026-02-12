@@ -66,7 +66,7 @@ const Layout = () => {
                 color: 'var(--text-muted)'
             }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                    <p style={{ fontWeight: '600', color: 'var(--text-main)', marginBottom: '0.5rem' }}>B1 Speaking Practice</p>
+                    <p style={{ fontWeight: '600', color: 'var(--text-main)', marginBottom: '0.5rem' }}>Speaking Practice</p>
                     <p style={{ fontSize: '0.875rem' }}>&copy; {new Date().getFullYear()} Designed for excellence in English speaking.</p>
                 </div>
             </footer>

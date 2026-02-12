@@ -18,6 +18,7 @@ const QuestionPage = () => {
     const audioChunksRef = useRef([]);
     const timerIntervalRef = useRef(null);
     const recognitionRef = useRef(null);
+    const mimeTypeRef = useRef('audio/webm'); // Default
 
     const unit = b1Data.find(u => u.id === parseInt(unitId));
     const question = unit?.questions.find(q => q.id === parseInt(questionId));
@@ -60,7 +61,20 @@ const QuestionPage = () => {
             setTranscription('');
 
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorderRef.current = new MediaRecorder(stream);
+
+            // Detect supported mime types
+            const types = [
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/ogg;codecs=opus',
+                'audio/mp4',
+                'audio/aac',
+                'audio/wav'
+            ];
+            const supportedType = types.find(type => MediaRecorder.isTypeSupported(type)) || '';
+            mimeTypeRef.current = supportedType;
+
+            mediaRecorderRef.current = new MediaRecorder(stream, supportedType ? { mimeType: supportedType } : {});
             audioChunksRef.current = [];
 
             mediaRecorderRef.current.ondataavailable = (event) => {
@@ -238,9 +252,31 @@ const QuestionPage = () => {
                                 fontWeight: '700',
                                 textTransform: 'uppercase'
                             }}>
-                                {isRecording ? "Live Transcription" : "Final Transcription"}
+                                {isRecording ? "Live Transcription" : "Transcription"}
                             </span>
-                            {transcription || "Listening for your voice..."}
+                            {isRecording ? (
+                                transcription || "Listening for your voice..."
+                            ) : (
+                                <textarea
+                                    value={transcription}
+                                    onChange={(e) => setTranscription(e.target.value)}
+                                    placeholder="Transcription will appear here, or you can type/edit it manually..."
+                                    style={{
+                                        width: '100%',
+                                        minHeight: '100px',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        outline: 'none',
+                                        fontFamily: 'inherit',
+                                        fontSize: '1rem',
+                                        color: 'inherit',
+                                        lineHeight: '1.6',
+                                        resize: 'vertical',
+                                        padding: 0,
+                                        margin: 0
+                                    }}
+                                />
+                            )}
                         </div>
                     </div>
                 )}
