@@ -84,11 +84,9 @@ const QuestionPage = () => {
             };
 
             mediaRecorderRef.current.onstop = async () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+                const audioBlob = new Blob(audioChunksRef.current, { type: mimeTypeRef.current || 'audio/wav' });
                 const url = URL.createObjectURL(audioBlob);
                 setRecordedUrl(url);
-
-                // Automatic evaluation removed - now manual via button
             };
 
             mediaRecorderRef.current.start();
