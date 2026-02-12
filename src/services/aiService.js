@@ -1,14 +1,16 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(API_KEY);
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+
+const groq = new Groq({
+    apiKey: GROQ_API_KEY,
+    dangerouslyAllowBrowser: true // For client-side demo purposes
+});
 
 export const evaluateSpeaking = async (question, transcription) => {
-    if (!API_KEY) {
-        throw new Error("Gemini API Key is missing. Please add VITE_GEMINI_API_KEY to your .env file.");
+    if (!GROQ_API_KEY) {
+        throw new Error("Groq API Key is missing. Please add VITE_GROQ_API_KEY to your .env file.");
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `
     You are an expert English language examiner specializing in B1 (Intermediate) level certification.
@@ -28,18 +30,25 @@ export const evaluateSpeaking = async (question, transcription) => {
   `;
 
     try {
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+        const response = await groq.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: "Evaluate English speaking level B1. Respond ONLY with a valid JSON object."
+                },
+                {
+                    role: "user",
+                    content: prompt,
+                },
+            ],
+            model: "llama-3.3-70b-versatile",
+            response_format: { type: "json_object" }
+        });
 
-        // Extract JSON from the response (in case AI wraps it in markdown blocks)
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-            return JSON.parse(jsonMatch[0]);
-        }
-        throw new Error("Invalid AI response format");
+        const text = response.choices[0]?.message?.content;
+        return JSON.parse(text);
     } catch (error) {
-        console.error("AI Evaluation Error:", error);
+        console.error("Groq Evaluation Error:", error);
         throw error;
     }
 };

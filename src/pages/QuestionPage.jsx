@@ -74,10 +74,7 @@ const QuestionPage = () => {
                 const url = URL.createObjectURL(audioBlob);
                 setRecordedUrl(url);
 
-                // Start AI Evaluation if we have transcription
-                if (transcription.trim()) {
-                    handleEvaluation();
-                }
+                // Automatic evaluation removed - now manual via button
             };
 
             mediaRecorderRef.current.start();
@@ -266,42 +263,77 @@ const QuestionPage = () => {
                     </div>
                 )}
 
+                {/* Action Buttons */}
                 {!aiResult && !isScoring && (
-                    <div style={{ marginBottom: '1.5rem', position: 'relative' }}>
-                        <button
-                            onClick={toggleRecording}
-                            disabled={isScoring}
-                            style={{
-                                width: 'clamp(80px, 20vw, 96px)',
-                                height: 'clamp(80px, 20vw, 96px)',
-                                borderRadius: '50%',
-                                backgroundColor: isRecording ? 'var(--danger)' : 'var(--primary)',
-                                color: '#ffffff',
-                                border: 'none',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                margin: '0 auto',
-                                boxShadow: isRecording ? '0 0 0 8px rgba(239, 68, 68, 0.2)' : 'var(--shadow-lg)',
-                                opacity: isScoring ? 0.5 : 1,
-                                cursor: isScoring ? 'not-allowed' : 'pointer',
-                                transform: isRecording ? 'scale(1.05)' : 'scale(1)',
-                                transition: 'all 0.2s',
-                                zIndex: 2,
-                                position: 'relative'
-                            }}
-                        >
-                            {isRecording ? (
-                                <div style={{ width: 'clamp(20px, 5vw, 28px)', height: 'clamp(20px, 5vw, 28px)', backgroundColor: '#fff', borderRadius: '4px' }} />
-                            ) : (
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 'clamp(24px, 6vw, 32px)', height: 'clamp(24px, 6vw, 32px)' }}>
-                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                    <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
-                                    <line x1="12" y1="19" x2="12" y2="23"></line>
-                                    <line x1="8" y1="23" x2="16" y2="23"></line>
-                                </svg>
-                            )}
-                        </button>
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '1.5rem',
+                        marginTop: '1rem'
+                    }}>
+                        <div style={{ position: 'relative' }}>
+                            <button
+                                onClick={toggleRecording}
+                                disabled={isScoring}
+                                style={{
+                                    width: 'clamp(80px, 20vw, 96px)',
+                                    height: 'clamp(80px, 20vw, 96px)',
+                                    borderRadius: '50%',
+                                    backgroundColor: isRecording ? 'var(--danger)' : 'var(--primary)',
+                                    color: '#ffffff',
+                                    border: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: '0 auto',
+                                    boxShadow: isRecording ? '0 0 0 8px rgba(239, 68, 68, 0.2)' : 'var(--shadow-lg)',
+                                    opacity: isScoring ? 0.5 : 1,
+                                    cursor: isScoring ? 'not-allowed' : 'pointer',
+                                    transform: isRecording ? 'scale(1.05)' : 'scale(1)',
+                                    transition: 'all 0.2s',
+                                    zIndex: 2,
+                                    position: 'relative'
+                                }}
+                            >
+                                {isRecording ? (
+                                    <div style={{ width: 'clamp(20px, 5vw, 28px)', height: 'clamp(20px, 5vw, 28px)', backgroundColor: '#fff', borderRadius: '4px' }} />
+                                ) : (
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 'clamp(24px, 6vw, 32px)', height: 'clamp(24px, 6vw, 32px)' }}>
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                )}
+                            </button>
+                        </div>
+
+                        {!isRecording && transcription && (
+                            <button
+                                onClick={handleEvaluation}
+                                style={{
+                                    backgroundColor: 'var(--success, #10b981)',
+                                    color: 'white',
+                                    padding: '1rem 2rem',
+                                    borderRadius: '12px',
+                                    border: 'none',
+                                    fontSize: '1.1rem',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    boxShadow: 'var(--shadow-md)',
+                                    transition: 'all 0.2s',
+                                    animation: 'fadeIn 0.3s ease-out'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                                onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                            >
+                                <span>✨</span> Analyze with AI
+                            </button>
+                        )}
                     </div>
                 )}
 

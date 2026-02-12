@@ -63,9 +63,36 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
                     padding: '1.5rem',
                     backgroundColor: '#f0fdf4',
                     borderRadius: '16px',
-                    border: '1px solid #bcf0da'
+                    border: '1px solid #bcf0da',
+                    position: 'relative',
+                    group: 'true'
                 }}>
-                    <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#059669', marginBottom: '1rem', fontWeight: '700', letterSpacing: '0.05em' }}>AI Corrected Version</h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#059669', fontWeight: '700', letterSpacing: '0.05em', margin: 0 }}>AI Corrected Version</h3>
+                        <button
+                            onClick={() => {
+                                navigator.clipboard.writeText(result.transcriptionCorrected);
+                                const btn = document.getElementById('copy-btn');
+                                btn.innerText = '✅ Copied';
+                                setTimeout(() => btn.innerText = '📋 Copy', 2000);
+                            }}
+                            id="copy-btn"
+                            style={{
+                                background: '#dcfce7',
+                                border: '1px solid #86efac',
+                                color: '#166534',
+                                fontSize: '0.75rem',
+                                fontWeight: '600',
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                            }}
+                        >
+                            📋 Copy
+                        </button>
+                    </div>
                     <p style={{ fontStyle: 'italic', fontSize: '1.1rem', color: '#065f46', lineHeight: '1.6', margin: 0 }}>
                         "{result.transcriptionCorrected}"
                     </p>
@@ -80,26 +107,38 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
             </div>
 
             <div style={{ marginBottom: '2.5rem' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: '700', color: 'var(--text-main)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '1.25rem' }}>💡</span> Recommendations to Improve
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'var(--text-main)', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.5rem' }}>💡</span> Recommendations to Improve
                 </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {(result.suggestions || result.recommendations || []).length > 0 ? (
                         (result.suggestions || result.recommendations || []).map((tip, i) => (
                             <div key={i} style={{
-                                backgroundColor: '#fffbeb',
-                                padding: '1rem',
-                                borderRadius: '12px',
-                                borderLeft: '4px solid #f59e0b',
-                                color: '#92400e',
-                                fontSize: '1rem'
+                                backgroundColor: '#fff7ed',
+                                padding: '1.25rem',
+                                borderRadius: '16px',
+                                borderLeft: '5px solid #f97316',
+                                color: '#9a3412',
+                                fontSize: '1.05rem',
+                                lineHeight: '1.5',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                                animation: `fadeIn 0.5s ease-out ${i * 0.15}s forwards`
                             }}>
+                                <strong style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.9rem', textTransform: 'uppercase', opacity: 0.8 }}>Tip {i + 1}</strong>
                                 {tip}
                             </div>
                         ))
                     ) : (
-                        <div style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                            Good job! No specific improvements needed for this response.
+                        <div style={{
+                            padding: '1.5rem',
+                            backgroundColor: '#f8fafc',
+                            borderRadius: '16px',
+                            border: '1px dashed var(--border)',
+                            color: 'var(--text-muted)',
+                            fontStyle: 'italic',
+                            textAlign: 'center'
+                        }}>
+                            Excellent work! Your response is strong and fits the B1 criteria perfectly.
                         </div>
                     )}
                 </div>

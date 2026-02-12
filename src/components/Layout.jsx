@@ -33,7 +33,7 @@ const Layout = () => {
                         textDecoration: 'none',
                         letterSpacing: '-0.025em'
                     }}>
-                        B1 Speaking
+                        Speaking
                     </Link>
                     <div style={{ display: 'flex', gap: '2rem' }}>
                         <Link to="/" style={{
