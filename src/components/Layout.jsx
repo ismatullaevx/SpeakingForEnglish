@@ -1,7 +1,16 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Layout = () => {
+    const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
         <div style={{
             minHeight: '100vh',
@@ -35,7 +44,7 @@ const Layout = () => {
                     }}>
                         Speaking
                     </Link>
-                    <div style={{ display: 'flex', gap: '2rem' }}>
+                    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                         <Link to="/" style={{
                             color: 'var(--text-main)',
                             textDecoration: 'none',
@@ -44,14 +53,47 @@ const Layout = () => {
                         }}>
                             Practice
                         </Link>
-                        <Link to="/" style={{
-                            color: 'var(--text-muted)',
-                            textDecoration: 'none',
-                            fontWeight: '500',
-                            fontSize: '0.875rem'
-                        }}>
-                            Units
-                        </Link>
+
+                        {isAuthenticated ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                                <span style={{
+                                    fontSize: '0.875rem',
+                                    fontWeight: '500',
+                                    color: 'var(--text-muted)'
+                                }}>
+                                    Hi, {user.name}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    style={{
+                                        padding: '0.5rem 1rem',
+                                        borderRadius: '0.5rem',
+                                        border: '1px solid var(--border)',
+                                        background: 'white',
+                                        fontSize: '0.875rem',
+                                        fontWeight: '600',
+                                        color: 'var(--danger)'
+                                    }}
+                                >
+                                    Log Out
+                                </button>
+                            </div>
+                        ) : (
+                            <Link
+                                to="/login"
+                                style={{
+                                    padding: '0.5rem 1.25rem',
+                                    borderRadius: '0.5rem',
+                                    background: 'var(--primary)',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    fontSize: '0.875rem',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
                 </nav>
             </header>
