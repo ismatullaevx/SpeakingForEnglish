@@ -11,28 +11,54 @@ const UnitPage = () => {
         return (
             <div style={{ textAlign: 'center', padding: '4rem 0' }}>
                 <h2>Unit Not Found</h2>
-                <Link to="/" style={{ color: '#4f46e5' }}>Go back to Home</Link>
+                <Link to="/" style={{ color: 'var(--primary)' }}>Go back to Home</Link>
             </div>
         );
     }
 
     return (
-        <div>
-            <nav style={{ marginBottom: '2rem' }}>
-                <Link to="/" style={{ color: '#6b7280', textDecoration: 'none', fontSize: '0.875rem' }}>← Back to Units</Link>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+            <nav style={{ marginBottom: '2.5rem' }}>
+                <Link to="/" style={{
+                    color: 'var(--text-muted)',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                }}>
+                    <span>←</span> Back to Units
+                </Link>
             </nav>
 
-            <section style={{ marginBottom: '3rem' }}>
-                <h1 style={{ fontSize: '2rem', color: '#111827', marginBottom: '0.5rem' }}>{unit.title}</h1>
-                <p style={{ color: '#6b7280' }}>{unit.description}</p>
-            </section>
+            <header style={{ marginBottom: '3.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                    <span style={{
+                        backgroundColor: 'var(--primary)',
+                        color: 'white',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.75rem',
+                        fontWeight: '700'
+                    }}>
+                        UNIT {unit.id}
+                    </span>
+                </div>
+                <h1 style={{ fontSize: '2.5rem', color: 'var(--text-main)', marginBottom: '1rem' }}>{unit.title}</h1>
+                <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', maxWidth: '600px' }}>{unit.description}</p>
+            </header>
 
-            <div style={{ maxWidth: '800px' }}>
-                <h2 style={{ fontSize: '1.5rem', color: '#374151', marginBottom: '1.5rem' }}>Questions</h2>
-                {unit.questions.map(q => (
-                    <QuestionItem key={q.id} question={q} unitId={unit.id} />
-                ))}
-            </div>
+            <section>
+                <h2 style={{ fontSize: '1.25rem', color: 'var(--text-main)', marginBottom: '1.5rem', fontWeight: '600' }}>
+                    Practice Questions
+                </h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {unit.questions.map(q => (
+                        <QuestionItem key={q.id} question={q} unitId={unit.id} />
+                    ))}
+                </div>
+            </section>
         </div>
     );
 };

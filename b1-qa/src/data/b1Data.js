@@ -31,5 +31,27 @@ export const b1Data = [
       { id: 303, text: "What is your dream job?" },
       { id: 304, text: "Why is learning English important for you?" }
     ]
+  },
+  {
+    id: 4,
+    title: "Unit 4: Health and Lifestyle",
+    description: "Questions about sports, exercise, eating habits, and well-being.",
+    questions: [
+      { id: 401, text: "Do you think you have a healthy lifestyle?" },
+      { id: 402, text: "What sports are popular in your country?" },
+      { id: 403, text: "How often do you eat fast food?" },
+      { id: 404, text: "What do you do to relax after a stressful day?" }
+    ]
+  },
+  {
+    id: 5,
+    title: "Unit 5: Travel and Holidays",
+    description: "Questions about your favorite destinations, transportation, and culture.",
+    questions: [
+      { id: 501, text: "Where did you go on your last holiday?" },
+      { id: 502, text: "Do you prefer traveling alone or with friends?" },
+      { id: 503, text: "What is the most beautiful place you have ever visited?" },
+      { id: 504, text: "Which country would you like to visit in the future?" }
+    ]
   }
 ];
