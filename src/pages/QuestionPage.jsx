@@ -90,7 +90,13 @@ const QuestionPage = () => {
             };
 
             mediaRecorderRef.current.start();
-            if (recognitionRef.current) recognitionRef.current.start();
+            if (recognitionRef.current) {
+                try {
+                    recognitionRef.current.start();
+                } catch (e) {
+                    console.error("Speech Recognition failed to start:", e);
+                }
+            }
 
             setIsRecording(true);
             setRecordedUrl(null);
@@ -211,7 +217,7 @@ const QuestionPage = () => {
                     "{question.text}"
                 </h1>
 
-                {(isRecording || transcription) && !aiResult && (
+                {(isRecording || recordedUrl || transcription) && !aiResult && (
                     <div style={{ marginBottom: '2rem' }}>
                         {isRecording && (
                             <div style={{
@@ -342,18 +348,18 @@ const QuestionPage = () => {
                             </button>
                         </div>
 
-                        {!isRecording && transcription && (
+                        {!isRecording && (recordedUrl || transcription) && (
                             <button
                                 onClick={handleEvaluation}
                                 style={{
-                                    backgroundColor: 'var(--success, #10b981)',
+                                    backgroundColor: (transcription.trim().length < 5) ? 'var(--text-muted)' : 'var(--success, #10b981)',
                                     color: 'white',
                                     padding: '1rem 2rem',
                                     borderRadius: '12px',
                                     border: 'none',
                                     fontSize: '1.1rem',
                                     fontWeight: '700',
-                                    cursor: 'pointer',
+                                    cursor: (transcription.trim().length < 5) ? 'not-allowed' : 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '0.75rem',
@@ -361,10 +367,15 @@ const QuestionPage = () => {
                                     transition: 'all 0.2s',
                                     animation: 'fadeIn 0.3s ease-out'
                                 }}
-                                onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                                disabled={transcription.trim().length < 5}
+                                onMouseOver={(e) => {
+                                    if (transcription.trim().length >= 5) {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                    }
+                                }}
                                 onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                             >
-                                <span>✨</span> Analyze with AI
+                                <span>✨</span> {transcription.trim().length < 5 ? 'Type your answer to analyze' : 'Analyze with AI'}
                             </button>
                         )}
                     </div>
