@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { b1Data } from '../data/b1Data';
+import { supabase } from '../lib/supabase';
 import { evaluateSpeaking } from '../services/aiService';
 import ScoreResult from '../components/ScoreResult';
 
@@ -14,14 +14,38 @@ const QuestionPage = () => {
     const [aiResult, setAiResult] = useState(null);
     const [error, setError] = useState(null);
 
+    const [unit, setUnit] = useState(null);
+    const [question, setQuestion] = useState(null);
+    const [loading, setLoading] = useState(true);
+
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
     const timerIntervalRef = useRef(null);
     const recognitionRef = useRef(null);
     const mimeTypeRef = useRef('audio/webm'); // Default
 
-    const unit = b1Data.find(u => u.id === parseInt(unitId));
-    const question = unit?.questions.find(q => q.id === parseInt(questionId));
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('questions')
+                    .select('*, units(*)')
+                    .eq('id', questionId)
+                    .single();
+
+                if (error) throw error;
+                setQuestion(data);
+                setUnit(Array.isArray(data.units) ? data.units[0] : data.units);
+            } catch (err) {
+                console.error("Error fetching question:", err);
+                setError("Failed to load question details.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [questionId]);
 
     useEffect(() => {
         // Initialize Web Speech API
@@ -148,7 +172,30 @@ const QuestionPage = () => {
         }
     };
 
-    if (!unit || !question) {
+    if (loading) {
+        return (
+            <div style={{ textAlign: 'center', padding: '10vh 0' }}>
+                <div className="loader" style={{ 
+                    border: '3px solid #f3f3f3',
+                    borderTop: '3px solid var(--primary)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 1rem'
+                }}></div>
+                <p style={{ color: 'var(--text-muted)' }}>Loading question...</p>
+                <style>{`
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    if (error || !unit || !question) {
         return (
             <div style={{ textAlign: 'center', padding: '4rem 0' }}>
                 <h2>Question Not Found</h2>

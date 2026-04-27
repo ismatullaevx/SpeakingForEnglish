@@ -1,13 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { b1Data } from '../data/b1Data';
+import { supabase } from '../lib/supabase';
 import QuestionItem from '../components/QuestionItem';
 
 const UnitPage = () => {
     const { unitId } = useParams();
-    const unit = b1Data.find(u => u.id === parseInt(unitId));
+    const [unit, setUnit] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    if (!unit) {
+    useEffect(() => {
+        const fetchUnitData = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('units')
+                    .select('*, questions(*)')
+                    .eq('id', unitId)
+                    .single();
+
+                if (error) throw error;
+                setUnit(data);
+            } catch (err) {
+                console.error('Error fetching unit:', err);
+                setError('Failed to load unit details.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUnitData();
+    }, [unitId]);
+
+    if (loading) {
+        return (
+            <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+                <div className="loader" style={{ 
+                    border: '3px solid #f3f3f3',
+                    borderTop: '3px solid var(--primary)',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 1rem'
+                }}></div>
+                <p style={{ color: 'var(--text-muted)' }}>Loading unit practice...</p>
+                <style>{`
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `}</style>
+            </div>
+        );
+    }
+
+    if (error || !unit) {
         return (
             <div style={{ textAlign: 'center', padding: '4rem 0' }}>
                 <h2>Unit Not Found</h2>
