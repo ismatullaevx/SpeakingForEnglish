@@ -16,6 +16,7 @@ const LoginPage = () => {
         try {
             await signInWithGoogle();
         } catch (err) {
+            console.error('Google login error details:', err);
             setError('Google login error: ' + err.message);
         }
     };
@@ -25,10 +26,17 @@ const LoginPage = () => {
         setError('');
         setLoading(true);
         try {
-            await login(email, password);
+            console.log('Attempting login for:', email);
+            const data = await login(email, password);
+            console.log('Login success data:', data);
             navigate('/');
         } catch (err) {
-            console.error('Login error:', err);
+            console.error('Login catch error details:', {
+                message: err.message,
+                status: err.status,
+                name: err.name,
+                fullError: err
+            });
             if (err.message?.includes('Email not confirmed')) {
                 setError('Please confirm your email address before signing in. Check your inbox for a confirmation link.');
             } else if (err.message?.includes('rate limit')) {

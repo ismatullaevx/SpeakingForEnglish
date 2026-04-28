@@ -26,6 +26,7 @@ const SignUpPage = () => {
         try {
             await signInWithGoogle();
         } catch (err) {
+            console.error('Google signup error details:', err);
             setError('Google sign up error: ' + err.message);
         }
     };
@@ -35,28 +36,41 @@ const SignUpPage = () => {
         setError('');
 
         if (formData.password !== formData.confirmPassword) {
+            console.warn('Signup validation failed: Passwords do not match');
             return setError('Passwords do not match');
         }
 
         if (formData.password.length < 6) {
+            console.warn('Signup validation failed: Password too short');
             return setError('Password must be at least 6 characters');
         }
 
         setLoading(true);
         try {
+            console.log('Attempting signup for:', formData.email);
             const data = await signup(formData.email, formData.password, { full_name: formData.name });
+            console.log('Signup response data:', data);
             
-            // If session is null, email confirmation is required
             if (!data.session) {
+                console.log('Signup successful but email confirmation required');
                 setSuccess('confirmation_required');
+                setTimeout(() => {
+                    navigate('/login');
+                }, 4000); // Auto redirect to login
             } else {
+                console.log('Signup successful, user automatically logged in');
                 setSuccess('auto_login');
                 setTimeout(() => {
                     navigate('/');
                 }, 2000);
             }
         } catch (err) {
-            console.error('Signup error:', err);
+            console.error('Signup catch error details:', {
+                message: err.message,
+                status: err.status,
+                name: err.name,
+                fullError: err
+            });
             if (err.message?.includes('Email not confirmed')) {
                 setError('Please confirm your email address before signing in. Check your inbox for a confirmation link.');
             } else if (err.message?.includes('rate limit')) {
@@ -95,9 +109,13 @@ const SignUpPage = () => {
                             ? "We've sent a confirmation link to your email address. Please click it to activate your account."
                             : 'Your account has been successfully created. You are being redirected...'}
                     </p>
-                    <Link to="/login" className="auth-button" style={{ display: 'block', textDecoration: 'none' }}>
+                    <button 
+                        onClick={() => navigate('/login')} 
+                        className="auth-button" 
+                        style={{ display: 'block', width: '100%', border: 'none', cursor: 'pointer', marginTop: '1rem' }}
+                    >
                         Go to Login
-                    </Link>
+                    </button>
                 </div>
             </div>
         );
