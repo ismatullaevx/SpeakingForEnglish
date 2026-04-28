@@ -113,3 +113,36 @@ const evaluateWithGroq = async (question, transcription, level) => {
         throw error;
     }
 };
+
+/**
+ * Transcribes audio using Groq's Whisper API
+ * @param {Blob} audioBlob - The recorded audio blob
+ * @returns {Promise<string>} - The transcribed text
+ */
+export const transcribeAudio = async (audioBlob) => {
+    if (!GROQ_API_KEY || !groq) {
+        throw new Error("Groq API Key is required for transcription. Please check your .env file.");
+    }
+
+    try {
+        // Convert Blob to a File object as expected by the Groq SDK
+        const file = new File([audioBlob], "recording.webm", { 
+            type: audioBlob.type || 'audio/webm' 
+        });
+
+        const transcription = await groq.audio.transcriptions.create({
+            file: file,
+            model: "whisper-large-v3",
+            language: "en", // We focus on English for this app
+            response_format: "json",
+        });
+
+        return transcription.text;
+    } catch (error) {
+        console.error("Transcription Error:", error);
+        if (error.message?.includes("API key")) {
+            throw new Error("Invalid or missing API key for transcription service.");
+        }
+        throw new Error("Failed to transcribe audio. Please try again or type your response.");
+    }
+};

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { evaluateSpeaking } from '../services/aiService';
+import { evaluateSpeaking, transcribeAudio } from '../services/aiService';
 import ScoreResult from '../components/ScoreResult';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,6 +13,7 @@ const QuestionPage = () => {
     const [timer, setTimer] = useState(60);
     const [transcription, setTranscription] = useState('');
     const [isScoring, setIsScoring] = useState(false);
+    const [isTranscribing, setIsTranscribing] = useState(false);
     const [aiResult, setAiResult] = useState(null);
     const [error, setError] = useState(null);
 
@@ -114,6 +115,22 @@ const QuestionPage = () => {
                 const audioBlob = new Blob(audioChunksRef.current, { type: mimeTypeRef.current || 'audio/wav' });
                 const url = URL.createObjectURL(audioBlob);
                 setRecordedUrl(url);
+
+                // Fetch high-quality transcription from backend
+                setIsTranscribing(true);
+                try {
+                    const text = await transcribeAudio(audioBlob);
+                    setTranscription(text);
+                } catch (err) {
+                    console.error("Backend transcription failed:", err);
+                    // We don't clear the error if it's already set (like mic access)
+                    // but we might want to inform the user that live transcription/manual typing is needed
+                    if (!transcription) {
+                        setError("Could not transcribe audio automatically. Please try typing your response.");
+                    }
+                } finally {
+                    setIsTranscribing(false);
+                }
             };
 
             mediaRecorderRef.current.start();
@@ -301,7 +318,7 @@ const QuestionPage = () => {
                     "{question.text}"
                 </h1>
 
-                {(isRecording || recordedUrl || transcription) && !aiResult && (
+                {(isRecording || recordedUrl || transcription || isTranscribing) && !aiResult && (
                     <div style={{ marginBottom: '2rem' }}>
                         {isRecording && (
                             <div style={{
@@ -340,10 +357,15 @@ const QuestionPage = () => {
                                 fontWeight: '700',
                                 textTransform: 'uppercase'
                             }}>
-                                {isRecording ? "Live Transcription" : "Transcription"}
+                                {isRecording ? "Live Transcription" : isTranscribing ? "Processing Audio..." : "Transcription"}
                             </span>
                             {isRecording ? (
                                 transcription || "Listening for your voice..."
+                            ) : isTranscribing ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-muted)' }}>
+                                    <div className="loader" style={{ width: '18px', height: '18px', borderWidth: '2px' }}></div>
+                                    <span>Converting speech to text...</span>
+                                </div>
                             ) : (
                                 <textarea
                                     value={transcription}
@@ -432,7 +454,7 @@ const QuestionPage = () => {
                             </button>
                         </div>
 
-                        {!isRecording && (recordedUrl || transcription) && (
+                        {!isRecording && !isTranscribing && (recordedUrl || transcription) && (
                             <button
                                 onClick={handleEvaluation}
                                 style={{
