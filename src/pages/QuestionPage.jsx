@@ -259,7 +259,7 @@ const QuestionPage = () => {
     }
 
     return (
-        <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div className="container" style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
             <nav style={{ marginBottom: 'clamp(1.5rem, 5vh, 2rem)' }}>
                 <Link to={`/unit/${unitId}`} style={{
                     color: 'var(--text-muted)',
@@ -275,11 +275,11 @@ const QuestionPage = () => {
             </nav>
 
             <div className="card" style={{
-                padding: 'clamp(2rem, 10vw, 4rem) clamp(1rem, 5vw, 3rem)',
+                padding: 'clamp(1.5rem, 8vw, 3rem) clamp(1rem, 5vw, 2.5rem)',
                 textAlign: 'center',
                 position: 'relative',
                 overflow: 'hidden',
-                marginBottom: '2rem'
+                marginBottom: '1.5rem'
             }}>
                 {/* Visual Accent */}
                 <div style={{
@@ -309,11 +309,12 @@ const QuestionPage = () => {
                 </div>
 
                 <h1 style={{
-                    fontSize: 'clamp(1.5rem, 6vw, 2.25rem)',
+                    fontSize: 'clamp(1.25rem, 5vw, 2rem)',
                     color: 'var(--text-main)',
-                    marginBottom: 'clamp(1.5rem, 6vh, 3rem)',
-                    lineHeight: '1.3',
-                    fontWeight: '800'
+                    marginBottom: 'clamp(1rem, 5vh, 2.5rem)',
+                    lineHeight: '1.4',
+                    fontWeight: '800',
+                    wordBreak: 'break-word'
                 }}>
                     "{question.text}"
                 </h1>
@@ -334,13 +335,13 @@ const QuestionPage = () => {
 
                         {/* Transcription Display */}
                         <div style={{
-                            padding: '1.5rem',
+                            padding: 'clamp(1rem, 4vw, 1.5rem)',
                             backgroundColor: '#f8fafc',
                             borderRadius: '1rem',
                             border: '1px dashed var(--border)',
                             minHeight: '80px',
                             color: transcription ? 'var(--text-main)' : 'var(--text-muted)',
-                            fontSize: '1rem',
+                            fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
                             lineHeight: '1.6',
                             textAlign: 'left',
                             position: 'relative',
@@ -373,12 +374,12 @@ const QuestionPage = () => {
                                     placeholder="Transcription will appear here, or you can type/edit it manually..."
                                     style={{
                                         width: '100%',
-                                        minHeight: '100px',
+                                        minHeight: 'clamp(80px, 15vh, 150px)',
                                         background: 'transparent',
                                         border: 'none',
                                         outline: 'none',
                                         fontFamily: 'inherit',
-                                        fontSize: '1rem',
+                                        fontSize: 'inherit',
                                         color: 'inherit',
                                         lineHeight: '1.6',
                                         resize: 'vertical',
@@ -460,14 +461,17 @@ const QuestionPage = () => {
                                 style={{
                                     backgroundColor: (transcription.trim().length < 5) ? 'var(--text-muted)' : 'var(--success, #10b981)',
                                     color: 'white',
-                                    padding: '1rem 2rem',
+                                    padding: 'clamp(0.75rem, 3vw, 1rem) clamp(1.5rem, 5vw, 2.5rem)',
                                     borderRadius: '12px',
                                     border: 'none',
-                                    fontSize: '1.1rem',
+                                    fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
                                     fontWeight: '700',
                                     cursor: (transcription.trim().length < 5) ? 'not-allowed' : 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    maxWidth: '300px',
                                     gap: '0.75rem',
                                     boxShadow: 'var(--shadow-md)',
                                     transition: 'all 0.2s',
@@ -481,7 +485,7 @@ const QuestionPage = () => {
                                 }}
                                 onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                             >
-                                <span>✨</span> {transcription.trim().length < 5 ? 'Type your answer to analyze' : 'Analyze with AI'}
+                                <span>✨</span> {transcription.trim().length < 5 ? 'Type to analyze' : 'Analyze with AI'}
                             </button>
                         )}
                     </div>

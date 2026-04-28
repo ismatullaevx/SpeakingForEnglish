@@ -11,30 +11,38 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
 
     return (
         <div className="card" style={{
-            marginTop: '2rem',
-            padding: '2rem',
+            marginTop: '1.5rem',
+            padding: 'clamp(1rem, 5vw, 2rem)',
             border: `2px solid ${getScoreColor(result.score)}`,
             background: 'white',
             textAlign: 'left',
             animation: 'fadeIn 0.5s ease-out',
             borderRadius: '24px'
         }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                marginBottom: '1.5rem',
+                gap: '1rem',
+                flexWrap: 'wrap'
+            }}>
                 <div>
-                    <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>Practice Result</h2>
-                    <p style={{ color: 'var(--text-muted)', margin: '0.25rem 0 0' }}>AI powered evaluation</p>
+                    <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>Practice Result</h2>
+                    <p style={{ color: 'var(--text-muted)', margin: '0.25rem 0 0', fontSize: '0.875rem' }}>AI powered evaluation</p>
                 </div>
                 <div style={{
                     backgroundColor: getScoreColor(result.score),
                     color: 'white',
-                    width: '70px',
-                    height: '70px',
+                    width: 'clamp(60px, 15vw, 70px)',
+                    height: 'clamp(60px, 15vw, 70px)',
                     borderRadius: '18px',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: `0 10px 15px -3px ${getScoreColor(result.score)}40`
+                    boxShadow: `0 10px 15px -3px ${getScoreColor(result.score)}40`,
+                    flexShrink: 0
                 }}>
                     <span style={{ fontSize: '1.5rem', fontWeight: '900', lineHeight: 1 }}>{result.score}</span>
                     <span style={{ fontSize: '0.75rem', fontWeight: '700', opacity: 0.9 }}>/ 10</span>
@@ -43,9 +51,9 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '2rem',
-                marginBottom: '2rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+                gap: 'clamp(1rem, 4vw, 2rem)',
+                marginBottom: '1.5rem'
             }}>
                 <div style={{
                     padding: '1.5rem',
@@ -60,14 +68,14 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
                 </div>
 
                 <div style={{
-                    padding: '1.5rem',
+                    padding: 'clamp(1rem, 4vw, 1.5rem)',
                     backgroundColor: '#f0fdf4',
                     borderRadius: '16px',
                     border: '1px solid #bcf0da',
                     position: 'relative'
                 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                        <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#059669', fontWeight: '700', letterSpacing: '0.05em', margin: 0 }}>AI Corrected Version</h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '0.5rem' }}>
+                        <h3 style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#059669', fontWeight: '700', letterSpacing: '0.05em', margin: 0 }}>AI Corrected Version</h3>
                         <button
                             onClick={() => {
                                 navigator.clipboard.writeText(result.transcriptionCorrected);
@@ -80,19 +88,20 @@ const ScoreResult = ({ result, originalTranscription, onRetry }) => {
                                 background: '#dcfce7',
                                 border: '1px solid #86efac',
                                 color: '#166534',
-                                fontSize: '0.75rem',
+                                fontSize: '0.7rem',
                                 fontWeight: '600',
                                 padding: '4px 8px',
                                 borderRadius: '6px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '4px'
+                                gap: '4px',
+                                flexShrink: 0
                             }}
                         >
                             📋 Copy
                         </button>
                     </div>
-                    <p style={{ fontStyle: 'italic', fontSize: '1.1rem', color: '#065f46', lineHeight: '1.6', margin: 0 }}>
+                    <p style={{ fontStyle: 'italic', fontSize: '1rem', color: '#065f46', lineHeight: '1.6', margin: 0 }}>
                         "{result.transcriptionCorrected}"
                     </p>
                 </div>

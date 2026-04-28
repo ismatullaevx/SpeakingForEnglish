@@ -22,7 +22,7 @@ const Layout = () => {
             <header style={{
                 backgroundColor: 'var(--card-bg)',
                 borderBottom: '1px solid var(--border)',
-                padding: '1.25rem 2rem',
+                padding: 'clamp(0.75rem, 3vw, 1.25rem) clamp(1rem, 5vw, 2rem)',
                 boxShadow: 'var(--shadow-sm)',
                 position: 'sticky',
                 top: 0,
@@ -44,7 +44,13 @@ const Layout = () => {
                     }}>
                         Speaking
                     </Link>
-                    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+                    <div style={{ 
+                        display: 'flex', 
+                        gap: 'clamp(1rem, 4vw, 2rem)', 
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-end'
+                    }}>
                         <Link to="/" style={{
                             color: 'var(--text-main)',
                             textDecoration: 'none',
@@ -59,13 +65,14 @@ const Layout = () => {
                                 <Link to="/profile" style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '0.75rem',
+                                    gap: '0.5rem',
                                     textDecoration: 'none',
-                                    padding: '0.4rem 0.8rem',
+                                    padding: '0.3rem 0.75rem',
                                     borderRadius: '9999px',
                                     backgroundColor: '#f1f5f9',
                                     transition: 'all 0.2s ease',
-                                    border: '1px solid transparent'
+                                    border: '1px solid transparent',
+                                    maxWidth: '150px'
                                 }}
                                 onMouseOver={(e) => {
                                     e.currentTarget.style.backgroundColor = '#e2e8f0';
@@ -77,23 +84,27 @@ const Layout = () => {
                                 }}
                                 >
                                     <div style={{
-                                        width: '28px',
-                                        height: '28px',
+                                        width: '24px',
+                                        height: '24px',
+                                        flexShrink: 0,
                                         borderRadius: '50%',
                                         backgroundColor: 'var(--primary)',
                                         color: 'white',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '0.75rem',
+                                        fontSize: '0.7rem',
                                         fontWeight: '700'
                                     }}>
                                         {user.name?.[0]?.toUpperCase()}
                                     </div>
                                     <span style={{
-                                        fontSize: '0.875rem',
+                                        fontSize: '0.75rem',
                                         fontWeight: '600',
-                                        color: 'var(--text-main)'
+                                        color: 'var(--text-main)',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap'
                                     }}>
                                         {user.name}
                                     </span>

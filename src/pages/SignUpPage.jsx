@@ -124,9 +124,9 @@ const SignUpPage = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h2 style={{ marginBottom: '0.5rem' }}>Create Account</h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 5vh, 2rem)' }}>
+                    <h2 style={{ marginBottom: '0.5rem', fontSize: 'clamp(1.5rem, 5vw, 1.875rem)' }}>Create Account</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)' }}>
                         Start your English learning journey today
                     </p>
                 </div>

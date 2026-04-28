@@ -54,9 +54,9 @@ const LoginPage = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    <h2 style={{ marginBottom: '0.5rem' }}>Welcome Back</h2>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 5vh, 2rem)' }}>
+                    <h2 style={{ marginBottom: '0.5rem', fontSize: 'clamp(1.5rem, 5vw, 1.875rem)' }}>Welcome Back</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.85rem, 2.5vw, 0.95rem)' }}>
                         Continue your English learning journey
                     </p>
                 </div>

@@ -76,7 +76,7 @@ const UnitPage = () => {
 
     return (
         <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <nav style={{ marginBottom: 'clamp(1.5rem, 5vh, 2.5rem)' }}>
+            <nav style={{ marginBottom: 'clamp(1rem, 5vh, 2rem)' }}>
                 <Link to="/" style={{
                     color: 'var(--text-muted)',
                     textDecoration: 'none',
@@ -90,28 +90,28 @@ const UnitPage = () => {
                 </Link>
             </nav>
 
-            <header style={{ marginBottom: 'clamp(2rem, 8vh, 3.5rem)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+            <header style={{ marginBottom: 'clamp(1.5rem, 6vh, 3rem)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
                     <span style={{
                         backgroundColor: 'var(--primary)',
                         color: 'white',
                         padding: '0.25rem 0.75rem',
                         borderRadius: '0.5rem',
-                        fontSize: '0.75rem',
+                        fontSize: '0.7rem',
                         fontWeight: '700'
                     }}>
                         UNIT {unit.id}
                     </span>
                 </div>
                 <h1 style={{
-                    fontSize: 'clamp(1.75rem, 6vw, 2.5rem)',
+                    fontSize: 'clamp(1.5rem, 5vw, 2.5rem)',
                     color: 'var(--text-main)',
-                    marginBottom: '1rem',
+                    marginBottom: '0.75rem',
                     lineHeight: '1.2'
                 }}>{unit.title}</h1>
                 <p style={{
                     color: 'var(--text-muted)',
-                    fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
+                    fontSize: 'clamp(0.9rem, 2.5vw, 1.125rem)',
                     maxWidth: '600px',
                     lineHeight: '1.6'
                 }}>{unit.description}</p>
