@@ -3,8 +3,10 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { evaluateSpeaking } from '../services/aiService';
 import ScoreResult from '../components/ScoreResult';
+import { useAuth } from '../context/AuthContext';
 
 const QuestionPage = () => {
+    const { user } = useAuth();
     const { unitId, questionId } = useParams();
     const [isRecording, setIsRecording] = useState(false);
     const [recordedUrl, setRecordedUrl] = useState(null);
@@ -35,10 +37,11 @@ const QuestionPage = () => {
 
                 if (error) throw error;
                 setQuestion(data);
-                setUnit(Array.isArray(data.units) ? data.units[0] : data.units);
+                const unitData = data.units || data.unit;
+                setUnit(Array.isArray(unitData) ? unitData[0] : unitData);
             } catch (err) {
                 console.error("Error fetching question:", err);
-                setError("Failed to load question details.");
+                setError("Failed to load question details. The database might be unreachable or the question ID is invalid.");
             } finally {
                 setLoading(false);
             }
@@ -154,11 +157,38 @@ const QuestionPage = () => {
 
     const handleEvaluation = async () => {
         setIsScoring(true);
+        setError(null);
         try {
+            // 1. AI Evaluation
             const result = await evaluateSpeaking(question.text, transcription);
             setAiResult(result);
+
+            // 2. Save response to Supabase (Independent of UI result)
+            if (user) {
+                try {
+                    const { error: saveError } = await supabase
+                        .from('user_responses')
+                        .insert({
+                            user_id: user.id,
+                            question_id: question.id,
+                            transcription: transcription,
+                            score: result.score,
+                            feedback: result.feedback,
+                            corrected_text: result.transcriptionCorrected,
+                            suggestions: result.suggestions
+                        });
+
+                    if (saveError) {
+                        console.warn("Database save error:", saveError.message);
+                        // We don't show this to the user as it doesn't affect their current practice
+                    }
+                } catch (dbErr) {
+                    console.error("Supabase operation failed:", dbErr);
+                }
+            }
         } catch (err) {
-            setError("AI Evaluation failed. Please check your API key and internet connection.");
+            console.error("Evaluation error details:", err);
+            setError(`AI Evaluation failed: ${err.message || "Please check your connection."}`);
         } finally {
             setIsScoring(false);
         }
@@ -195,11 +225,18 @@ const QuestionPage = () => {
         );
     }
 
-    if (error || !unit || !question) {
+    if (!loading && (!unit || !question)) {
         return (
             <div style={{ textAlign: 'center', padding: '4rem 0' }}>
-                <h2>Question Not Found</h2>
-                <Link to="/" style={{ color: 'var(--primary)' }}>Go back to Home</Link>
+                <h2 style={{ color: 'var(--text-main)', marginBottom: '1rem' }}>
+                    {error ? "Error Loading Content" : "Question Not Found"}
+                </h2>
+                {error && <p style={{ color: 'var(--danger)', marginBottom: '2rem' }}>{error}</p>}
+                <Link to="/" style={{ 
+                    color: 'var(--primary)',
+                    fontWeight: '600',
+                    textDecoration: 'none'
+                }}>← Go back to Home</Link>
             </div>
         );
     }

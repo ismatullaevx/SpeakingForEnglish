@@ -14,13 +14,13 @@ const groq = GROQ_API_KEY ? new Groq({
 const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 
 export const evaluateSpeaking = async (question, transcription) => {
-    // We prefer Gemini if available, otherwise Groq
-    if (GEMINI_API_KEY && genAI) {
-        return await evaluateWithGemini(question, transcription);
-    } else if (GROQ_API_KEY && groq) {
+    // We prefer Groq if available, otherwise Gemini
+    if (GROQ_API_KEY && groq) {
         return await evaluateWithGroq(question, transcription);
+    } else if (GEMINI_API_KEY && genAI) {
+        return await evaluateWithGemini(question, transcription);
     } else {
-        throw new Error("No AI API Key found. Please add VITE_GEMINI_API_KEY or VITE_GROQ_API_KEY to your .env file.");
+        throw new Error("No AI API Key found. Please add VITE_GROQ_API_KEY or VITE_GEMINI_API_KEY to your .env file.");
     }
 };
 

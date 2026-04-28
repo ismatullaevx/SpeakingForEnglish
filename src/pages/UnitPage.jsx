@@ -58,7 +58,18 @@ const UnitPage = () => {
         return (
             <div style={{ textAlign: 'center', padding: '4rem 0' }}>
                 <h2>Unit Not Found</h2>
-                <Link to="/" style={{ color: 'var(--primary)' }}>Go back to Home</Link>
+                <p style={{ color: 'var(--text-muted)', margin: '1rem 0 2rem' }}>
+                    We couldn't find the unit you're looking for. It might have been deleted or the database connection is limited by RLS policies.
+                </p>
+                <Link to="/" style={{ 
+                    display: 'inline-block',
+                    backgroundColor: 'var(--primary)',
+                    color: 'white',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '0.5rem',
+                    textDecoration: 'none',
+                    fontWeight: '600'
+                }}>Go back to Home</Link>
             </div>
         );
     }

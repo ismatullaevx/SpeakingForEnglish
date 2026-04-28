@@ -65,7 +65,7 @@ const HomePage = () => {
                     lineHeight: '1.6',
                     padding: '0 1rem'
                 }}>
-                    Prepare for your B1 certification with interactive speaking practice. Real questions, real-time timer, and instant playback.
+                    Prepare for your  certification with interactive speaking practice. Real questions, real-time timer, and instant playback.
                 </p>
             </section>
 
@@ -112,9 +112,40 @@ const HomePage = () => {
                     gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
                     gap: 'clamp(1rem, 3vw, 2rem)'
                 }}>
-                    {units.map(unit => (
-                        <UnitCard key={unit.id} unit={unit} />
-                    ))}
+                    {units.length > 0 ? (
+                        units.map(unit => (
+                            <UnitCard key={unit.id} unit={unit} />
+                        ))
+                    ) : (
+                        <div style={{ 
+                            gridColumn: '1 / -1', 
+                            textAlign: 'center', 
+                            padding: '4rem 2rem',
+                            backgroundColor: 'white',
+                            borderRadius: '1rem',
+                            border: '2px dashed var(--border)'
+                        }}>
+                            <h3 style={{ marginBottom: '1rem', color: 'var(--text-main)' }}>No Units Found</h3>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                                The database is empty or Row Level Security (RLS) is blocking the request.
+                            </p>
+                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                                <button 
+                                    onClick={() => window.location.reload()}
+                                    style={{
+                                        padding: '0.75rem 1.5rem',
+                                        backgroundColor: 'var(--primary)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '0.5rem',
+                                        fontWeight: '600'
+                                    }}
+                                >
+                                    Try Refreshing
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
