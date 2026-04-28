@@ -13,18 +13,18 @@ const groq = GROQ_API_KEY ? new Groq({
 // Initialize Gemini
 const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
 
-export const evaluateSpeaking = async (question, transcription) => {
+export const evaluateSpeaking = async (question, transcription, level = "B1") => {
     // We prefer Groq if available, otherwise Gemini
     if (GROQ_API_KEY && groq) {
-        return await evaluateWithGroq(question, transcription);
+        return await evaluateWithGroq(question, transcription, level);
     } else if (GEMINI_API_KEY && genAI) {
-        return await evaluateWithGemini(question, transcription);
+        return await evaluateWithGemini(question, transcription, level);
     } else {
         throw new Error("No AI API Key found. Please add VITE_GROQ_API_KEY or VITE_GEMINI_API_KEY to your .env file.");
     }
 };
 
-const evaluateWithGemini = async (question, transcription) => {
+const evaluateWithGemini = async (question, transcription, level) => {
     try {
         const model = genAI.getGenerativeModel({
             model: "gemini-1.5-flash",
@@ -32,16 +32,24 @@ const evaluateWithGemini = async (question, transcription) => {
         });
 
         const prompt = `
-            You are an expert English language examiner specializing in B1 (Intermediate) level certification.
-            Evaluate this spoken response to the question.
+            You are a professional English language examiner (like IELTS or Cambridge).
+            Task: Evaluate a student's spoken response to a question based on the CEFR ${level.toUpperCase()} level standards.
+            
             Question: "${question}"
             Student's Response: "${transcription}"
             
+            Instructions for Feedback:
+            1. Be specific and critical. Avoid generic praise like "you did well".
+            2. Identify exact grammar mistakes and provide corrections using examples from their text.
+            3. Suggest 2-3 specific vocabulary improvements that would elevate their response to a higher level.
+            4. Evaluate if they actually answered the question (Relevance).
+            5. Provide a summary that highlights both strengths and specific weaknesses.
+            
             Return a JSON object with these fields:
-            - "score": (number 1-10)
-            - "transcriptionCorrected": (string, corrected version)
-            - "feedback": (string, performance summary)
-            - "suggestions": (array of strings, 2-3 tips)
+            - "score": (number 1-10, be honest and strict based on ${level} level)
+            - "transcriptionCorrected": (string, a natural, professional version of their response)
+            - "feedback": (string, a detailed evaluation with specific examples of what was wrong)
+            - "suggestions": (array of strings, specific actionable tips for improvement)
         `;
 
         const result = await model.generateContent(prompt);
@@ -52,20 +60,33 @@ const evaluateWithGemini = async (question, transcription) => {
         // Fallback to Groq if Gemini fails
         if (GROQ_API_KEY && groq) {
             console.log("Falling back to Groq...");
-            return await evaluateWithGroq(question, transcription);
+            return await evaluateWithGroq(question, transcription, level);
         }
         throw error;
     }
 };
 
-const evaluateWithGroq = async (question, transcription) => {
+const evaluateWithGroq = async (question, transcription, level) => {
     const prompt = `
-    You are an expert English language examiner specializing in B1 (Intermediate) level certification.
-    Task: Evaluate a student's spoken response to the following question.
+    You are a professional English language examiner (like IELTS or Cambridge).
+    Task: Evaluate a student's spoken response to a question based on the CEFR ${level.toUpperCase()} level standards.
+    
     Question: "${question}"
     Student's Response: "${transcription}"
     
-    Provide a structured evaluation in JSON format with fields: score (1-10), transcriptionCorrected, feedback, suggestions (array).
+    Instructions for Feedback:
+    1. Be specific and critical. Avoid generic praise like "you did well".
+    2. Identify exact grammar mistakes and provide corrections using examples from their text.
+    3. Suggest 2-3 specific vocabulary improvements that would elevate their response to a higher level.
+    4. Evaluate if they actually answered the question (Relevance).
+    5. Provide a summary that highlights both strengths and specific weaknesses.
+    
+    Return a JSON object with these fields:
+    - "score": (number 1-10, be honest and strict based on ${level} level)
+    - "transcriptionCorrected": (string, a natural, professional version of their response)
+    - "feedback": (string, a detailed evaluation with specific examples of what was wrong)
+    - "suggestions": (array of strings, specific actionable tips for improvement)
+
     Respond ONLY with valid JSON.
   `;
 
@@ -74,7 +95,7 @@ const evaluateWithGroq = async (question, transcription) => {
             messages: [
                 {
                     role: "system",
-                    content: "Evaluate English speaking level B1. Respond ONLY with a valid JSON object."
+                    content: `You are an English examiner evaluating level ${level.toUpperCase()}. Respond ONLY with a valid JSON object.`
                 },
                 {
                     role: "user",

@@ -56,13 +56,48 @@ const Layout = () => {
 
                         {isAuthenticated ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                                <span style={{
-                                    fontSize: '0.875rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-muted)'
-                                }}>
-                                    Hi, {user.name}
-                                </span>
+                                <Link to="/profile" style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    textDecoration: 'none',
+                                    padding: '0.4rem 0.8rem',
+                                    borderRadius: '9999px',
+                                    backgroundColor: '#f1f5f9',
+                                    transition: 'all 0.2s ease',
+                                    border: '1px solid transparent'
+                                }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#e2e8f0';
+                                    e.currentTarget.style.borderColor = 'var(--primary)';
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#f1f5f9';
+                                    e.currentTarget.style.borderColor = 'transparent';
+                                }}
+                                >
+                                    <div style={{
+                                        width: '28px',
+                                        height: '28px',
+                                        borderRadius: '50%',
+                                        backgroundColor: 'var(--primary)',
+                                        color: 'white',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '0.75rem',
+                                        fontWeight: '700'
+                                    }}>
+                                        {user.name?.[0]?.toUpperCase()}
+                                    </div>
+                                    <span style={{
+                                        fontSize: '0.875rem',
+                                        fontWeight: '600',
+                                        color: 'var(--text-main)'
+                                    }}>
+                                        {user.name}
+                                    </span>
+                                </Link>
                                 <button
                                     onClick={handleLogout}
                                     style={{

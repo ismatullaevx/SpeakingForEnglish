@@ -6,14 +6,24 @@ const HomePage = () => {
     const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedLevel, setSelectedLevel] = useState('B1');
+
+    const levels = ['A2', 'B1', 'B1+', 'B2', 'B2+'];
 
     useEffect(() => {
         const fetchUnits = async () => {
+            setLoading(true);
             try {
-                const { data, error } = await supabase
+                let query = supabase
                     .from('units')
                     .select('*')
                     .order('id', { ascending: true });
+
+                if (selectedLevel) {
+                    query = query.eq('level', selectedLevel.toLowerCase());
+                }
+
+                const { data, error } = await query;
 
                 if (error) throw error;
                 setUnits(data || []);
@@ -26,13 +36,14 @@ const HomePage = () => {
         };
 
         fetchUnits();
-    }, []);
+    }, [selectedLevel]);
+
     return (
         <div className="container">
             <section style={{
                 textAlign: 'center',
-                marginBottom: 'clamp(2rem, 10vh, 5rem)',
-                marginTop: 'clamp(1rem, 5vh, 3rem)'
+                marginBottom: 'clamp(2rem, 10vh, 4rem)',
+                marginTop: 'clamp(1rem, 5vh, 2rem)'
             }}>
                 <div style={{ marginBottom: '1.5rem' }}>
                     <span style={{
@@ -58,15 +69,45 @@ const HomePage = () => {
                     Speak English with Confidence
                 </h1>
                 <p style={{
-                    fontSize: 'clamp(1rem, 3vw, 1.25rem)',
+                    fontSize: 'clamp(1rem, 3vw, 1.125rem)',
                     color: 'var(--text-muted)',
                     maxWidth: '700px',
-                    margin: '0 auto',
+                    margin: '0 auto 3rem',
                     lineHeight: '1.6',
                     padding: '0 1rem'
                 }}>
-                    Prepare for your  certification with interactive speaking practice. Real questions, real-time timer, and instant playback.
+                    Prepare for your certification with interactive speaking practice. Real questions, real-time timer, and instant playback.
                 </p>
+
+                {/* Level Selector */}
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '0.75rem',
+                    flexWrap: 'wrap',
+                    marginBottom: '2rem'
+                }}>
+                    {levels.map(level => (
+                        <button
+                            key={level}
+                            onClick={() => setSelectedLevel(level)}
+                            style={{
+                                padding: '0.6rem 1.5rem',
+                                borderRadius: '9999px',
+                                border: '2px solid',
+                                borderColor: selectedLevel === level ? 'var(--primary)' : 'var(--border)',
+                                backgroundColor: selectedLevel === level ? 'var(--primary)' : 'white',
+                                color: selectedLevel === level ? 'white' : 'var(--text-main)',
+                                fontWeight: '600',
+                                fontSize: '0.875rem',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {level}
+                        </button>
+                    ))}
+                </div>
             </section>
 
             {loading ? (

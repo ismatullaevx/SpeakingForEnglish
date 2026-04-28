@@ -160,7 +160,7 @@ const QuestionPage = () => {
         setError(null);
         try {
             // 1. AI Evaluation
-            const result = await evaluateSpeaking(question.text, transcription);
+            const result = await evaluateSpeaking(question.text, transcription, unit?.level || "B1");
             setAiResult(result);
 
             // 2. Save response to Supabase (Independent of UI result)
@@ -469,7 +469,7 @@ const QuestionPage = () => {
                     <div style={{ padding: '2rem 0', animation: 'fadeIn 0.5s' }}>
                         <div className="loader" style={{ margin: '0 auto 1.5rem', display: 'block' }}></div>
                         <p style={{ color: 'var(--text-main)', fontWeight: '600', marginBottom: '0.5rem' }}>Evaluating your performance...</p>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>AI is analyzing your response based on B1 standards</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>AI is analyzing your response based on {(unit?.level || "B1").toUpperCase()} standards</p>
                     </div>
                 )}
 

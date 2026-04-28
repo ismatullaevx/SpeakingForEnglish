@@ -8,6 +8,7 @@ import LoginPage from '../pages/LoginPage';
 import SignUpPage from '../pages/SignUpPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import NotFound from '../pages/NotFound';
+import ProfilePage from '../pages/ProfilePage';
 
 const AppRouter = () => {
     return (
@@ -30,6 +31,14 @@ const AppRouter = () => {
                     element={
                         <ProtectedRoute>
                             <QuestionPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="profile"
+                    element={
+                        <ProtectedRoute>
+                            <ProfilePage />
                         </ProtectedRoute>
                     }
                 />
